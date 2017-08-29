@@ -7,11 +7,12 @@ app.get("/", (req,res) => res.send ("Debe escribir una accion"));
 app.get("/:ac", (req,res) => {
     let ac = req.params.ac;
     switch (ac){
-        case "insertar":   
-            res.send("Debe escribir tarea a insertar");
+        case "insertar": 
+        case "completar":  
+            res.send("Debe escribir tarea");
         break;
         case "renombrar":
-            res.send("Debe escribir tarea a renombrar y nuevo nombre de tarea");
+            res.send("Debe escribir tarea y nuevo nombre de tarea");
         break;
     }
 });
@@ -26,6 +27,10 @@ app.get("/:ac/:tar", (req,res) => {
         break;
         case "renombrar":
             res.send("Debe escribir nuevo nombre de tarea");
+        break;
+        case "completar":
+            accion.completar(ac,tar)
+            .then(respuesta => res.send(respuesta));
         break;
     }
 });

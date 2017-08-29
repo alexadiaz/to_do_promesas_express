@@ -4,7 +4,7 @@ let conexion = null;
 let accion = {
     insertar: (accion,tarea) => consultar_datos(accion,tarea,null),
     renombrar:(accion,tarea,nueva_tarea) => consultar_datos(accion,tarea,nueva_tarea),
-    completar:null,
+    completar:(accion,tarea) => consultar_datos(accion,tarea,null),
     borrar:null,
     consultar:null,
     consultar_tarea:null,
@@ -36,6 +36,9 @@ function consultar_datos(accion,tarea,nueva_tarea){
                                     case "renombrar":
                                         return consultar_datos_renombrar(tarea,nueva_tarea)
                                         .then(resultado => resultado);
+                                    case "completar":
+                                        return completar(tarea)
+                                        .then(resultado => resultado);
                                 }
                             }
                         }
@@ -44,6 +47,7 @@ function consultar_datos(accion,tarea,nueva_tarea){
                                 conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
                                 return "Tarea ingresada ok";
                             case "renombrar":
+                            case "completar":
                                 return "La tarea no existe";
                         }
                     }).then (respuesta => {
@@ -69,5 +73,21 @@ function consultar_datos_renombrar(tarea,nueva_tarea){
         });
     });
 }
+
+function completar(tarea){
+    return new Promise(function(resolve,reject){
+        conexion.query(`SELECT tareas.estado FROM to_do.tareas where nombre = '${tarea}'`)
+        .then(function(datos){
+            if (datos[0].estado === "terminado"){
+                resolve ("La tarea ya estaba terminada");
+                return;
+            }
+            else{
+                conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tarea}'`);
+                resolve ("Tarea completada ok");
+            }
+        });
+    });
+};
 
 module.exports = accion;
