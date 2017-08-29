@@ -2,8 +2,8 @@ let mysql = require ("promise-mysql");
 let conexion = null;
 
 let accion = {
-    insertar: tarea => consultar_datos(tarea),
-    renombrar:null,
+    insertar: (accion,tarea) => consultar_datos(accion,tarea,null),
+    renombrar:(accion,tarea,nueva_tarea) => consultar_datos(accion,tarea,nueva_tarea),
     completar:null,
     borrar:null,
     consultar:null,
@@ -22,31 +22,51 @@ function crear_conexion(){
     });
 }
 
-function consultar_datos(tarea){
-    let existe_tarea = false;
-    return new Promise(function (resolve,reject){
+function consultar_datos(accion,tarea,nueva_tarea){
+    return new Promise((resolve,reject) => {
         crear_conexion()
-            .then(function(){
+            .then(() => {
                 conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
-                    .then (function(datos){
+                    .then ((datos) => {
                         for(let i in datos){
                             if(datos[i].nombre === tarea){
-                                existe_tarea =true;
-                                break;
+                                switch (accion){
+                                    case "insertar":
+                                        return "La tarea ya existe";
+                                    case "renombrar":
+                                        return consultar_datos_renombrar(tarea,nueva_tarea)
+                                        .then(resultado => resultado);
+                                }
                             }
                         }
-                        if(existe_tarea === false){
-                            conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
-                            return "Tarea ingresada ok";
+                        switch (accion){
+                            case "insertar":
+                                conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
+                                return "Tarea ingresada ok";
+                            case "renombrar":
+                                return "La tarea no existe";
                         }
-                        else{
-                            return "La tarea ya existe";
-                        }
-                    }).then (function(respuesta){
+                    }).then (respuesta => {
                         conexion.end();
                         resolve (respuesta);
                     });
             });
+    });
+}
+
+function consultar_datos_renombrar(tarea,nueva_tarea){
+    return new Promise ((resolve, reject) => {
+        conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
+        .then(function(datos){
+            for(let i in datos){
+                if (datos[i].nombre === nueva_tarea){
+                    resolve ("La tarea ya existe");
+                    return;
+                }
+            }
+            conexion.query(`UPDATE to_do.tareas SET nombre = '${nueva_tarea}' WHERE nombre = '${tarea}'`);
+            resolve ("Tarea renombrada ok");
+        });
     });
 }
 

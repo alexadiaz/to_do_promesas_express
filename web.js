@@ -6,19 +6,39 @@ app.get("/", (req,res) => res.send ("Debe escribir una accion"));
 
 app.get("/:ac", (req,res) => {
     let ac = req.params.ac;
-    if (ac === "insertar"){
-        res.send("Debe escribir tarea a insertar");
+    switch (ac){
+        case "insertar":   
+            res.send("Debe escribir tarea a insertar");
+        break;
+        case "renombrar":
+            res.send("Debe escribir tarea a renombrar y nuevo nombre de tarea");
+        break;
     }
 });
 
 app.get("/:ac/:tar", (req,res) => {
     let ac = req.params.ac;
     let tar = req.params.tar;
-    if (ac === "insertar"){
-        accion.insertar(tar)
-        .then(function(respuesta){
-            res.send (respuesta);
-        });
+    switch (ac){
+        case "insertar":
+            accion.insertar(ac,tar)
+            .then((respuesta) => res.send (respuesta));
+        break;
+        case "renombrar":
+            res.send("Debe escribir nuevo nombre de tarea");
+        break;
+    }
+});
+
+app.get("/:ac/:tar/:ntar",(req, res) => {
+    let ac = req.params.ac;
+    let tar = req.params.tar;
+    let ntar = req.params.ntar;
+    switch (ac){
+        case "renombrar":
+            accion.renombrar(ac,tar,ntar)
+            .then(respuesta => res.send(respuesta));
+        break;
     }
 });
 
