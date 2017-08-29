@@ -2,7 +2,7 @@ let mysql = require ("promise-mysql");
 let conexion = null;
 
 let accion = {
-    insertar: (dato_insertar) => consultar_datos(dato_insertar),
+    insertar: tarea => consultar_datos(tarea),
     renombrar:null,
     completar:null,
     borrar:null,
@@ -22,29 +22,32 @@ function crear_conexion(){
     });
 }
 
-function consultar_datos(dato_insertar){
+function consultar_datos(tarea){
     let existe_tarea = false;
-    if (dato_insertar === ""){
-        return "La tarea no debe estar en blanco";
-    }
-    else{
-        crear_conexion().
-        then(function(){
-            conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
-                .then (function(datos){
-                    for(let i in datos){
-                        if(datos[i].nombre === dato_insertar){
-                            existe_tarea =true;
-                            break;
+    return new Promise(function (resolve,reject){
+        crear_conexion()
+            .then(function(){
+                conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
+                    .then (function(datos){
+                        for(let i in datos){
+                            if(datos[i].nombre === tarea){
+                                existe_tarea =true;
+                                break;
+                            }
                         }
-                    }
-                }).
-                then (function(){
-                    conexion.close();
-                });
-        });
-        return "La tarea ya existe";    
-    }
+                        if(existe_tarea === false){
+                            conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
+                            return "Tarea ingresada ok";
+                        }
+                        else{
+                            return "La tarea ya existe";
+                        }
+                    }).then (function(respuesta){
+                        conexion.end();
+                        resolve (respuesta);
+                    });
+            });
+    });
 }
 
 module.exports = accion;
