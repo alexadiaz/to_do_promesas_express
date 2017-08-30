@@ -40,7 +40,7 @@ app.get("/:ac/:tar", (req, res) => {
             res.json("Debe escribir nuevo nombre de tarea");
             break;
         case "completar":
-            accion.completar(ac, tar).then(respuesta => res.json(respuesta));
+            accion.completar(tar).then(respuesta => res.json(respuesta));
             break;
         case "borrar":
             accion.borrar(tar).then(respuesta => res.json(respuesta));
