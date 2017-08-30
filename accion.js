@@ -5,7 +5,7 @@ let accion = {
     insertar: (accion,tarea) => consultar_datos(accion,tarea,null),
     renombrar:(accion,tarea,nueva_tarea) => consultar_datos(accion,tarea,nueva_tarea),
     completar:(accion,tarea) => consultar_datos(accion,tarea,null),
-    borrar:null,
+    borrar:(accion,tarea) => consultar_datos(accion,tarea,null),
     consultar:null,
     consultar_tarea:null,
     ayuda:null
@@ -39,6 +39,9 @@ function consultar_datos(accion,tarea,nueva_tarea){
                                     case "completar":
                                         return completar(tarea)
                                         .then(resultado => resultado);
+                                    case "borrar":
+                                        conexion.query(`DELETE FROM to_do.tareas WHERE nombre = '${tarea}'`);
+                                        return "Tarea borrada ok";
                                 }
                             }
                         }
@@ -48,6 +51,7 @@ function consultar_datos(accion,tarea,nueva_tarea){
                                 return "Tarea ingresada ok";
                             case "renombrar":
                             case "completar":
+                            case "borrar":
                                 return "La tarea no existe";
                         }
                     }).then (respuesta => {

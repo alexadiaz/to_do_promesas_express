@@ -8,7 +8,8 @@ app.get("/:ac", (req,res) => {
     let ac = req.params.ac;
     switch (ac){
         case "insertar": 
-        case "completar":  
+        case "completar": 
+        case "borrar": 
             res.send("Debe escribir tarea");
         break;
         case "renombrar":
@@ -31,6 +32,10 @@ app.get("/:ac/:tar", (req,res) => {
         case "completar":
             accion.completar(ac,tar)
             .then(respuesta => res.send(respuesta));
+        break;
+        case "borrar":
+            accion.borrar(ac,tar)
+            .then (respuesta => res.send(respuesta));
         break;
     }
 });
