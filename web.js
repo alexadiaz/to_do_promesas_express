@@ -19,6 +19,9 @@ app.get("/:ac", (req,res) => {
             accion.consultar()
             .then(respuesta => res.json({respuesta}));
         break;
+        case "consultar_tarea":
+            res.send("Debe escribir tarea o letras contenidas en ella");
+        break;
     }
 });
 
@@ -40,6 +43,10 @@ app.get("/:ac/:tar", (req,res) => {
         case "borrar":
             accion.borrar(ac,tar)
             .then (respuesta => res.send(respuesta));
+        break;
+        case "consultar_tarea":
+            accion.consultar_tarea(tar)
+            .then(respuesta => Array.isArray(respuesta) ? res.json({respuesta}) :res.send(respuesta));
         break;
     }
 });

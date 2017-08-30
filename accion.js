@@ -6,8 +6,8 @@ let accion = {
     renombrar:(accion,tarea,nueva_tarea) => verificar_tarea_existe(accion,tarea,nueva_tarea),
     completar:(accion,tarea) => verificar_tarea_existe(accion,tarea,null),
     borrar:(accion,tarea) => verificar_tarea_existe(accion,tarea,null),
-    consultar: () => consultar_tarea(),
-    consultar_tarea:null,
+    consultar: () => consultar_todo(),
+    consultar_tarea: tarea => consultar_tarea(tarea),
     ayuda:null
 }
 
@@ -94,12 +94,30 @@ function completar(tarea){
     });
 };
 
-function consultar_tarea(){
+function consultar_todo(){
     return new Promise ((resolve,reject) => {
         crear_conexion()
         .then(() => {
             conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas")
             .then(consulta =>{
+                conexion.end();
+                resolve (consulta);
+            });
+        });
+    });
+}
+
+function consultar_tarea(tarea){
+    return new Promise(function(resolve, reject){
+        crear_conexion()
+        .then (() =>{
+            conexion.query(`SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas WHERE tareas.nombre like '%${tarea}%'`)
+            .then (function(datos){
+                if(datos.length === 0){
+                    return "No se encontraron coincidencias";
+                }
+                return datos;
+            }).then (consulta => {
                 conexion.end();
                 resolve (consulta);
             });
