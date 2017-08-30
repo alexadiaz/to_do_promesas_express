@@ -3,9 +3,7 @@ let conexion = null;
 
 let accion = {
     insertar: (tarea) => insertar(tarea),
-    
-    renombrar:(accion,tarea,nueva_tarea) => verificar_tarea_existe(accion,tarea,nueva_tarea),
-    
+    renombrar:(tarea,nueva_tarea) => renombrar(tarea,nueva_tarea),
     completar:(tarea) => completar(tarea),
     borrar:(tarea) => borrar(tarea),
     consultar: () => consultar(),
@@ -34,46 +32,6 @@ function crear_conexion(){
     });
 }
 
-function verificar_tarea(accion,tarea,nueva_tarea){
-    return new Promise((resolve) => {
-        crear_conexion()
-        .then(() => {
-            conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
-            .then ((datos) => {
-                for(let i in datos){
-                    if(datos[i].nombre === tarea){
-                        switch (accion){
-                            case "insertar":
-                                return "La tarea ya existe";
-                            case "renombrar":
-                                return consultar_datos_renombrar(tarea,nueva_tarea)
-                                .then(resultado => resultado);
-                            case "completar":
-                                return completar(tarea)
-                                .then(resultado => resultado);
-                            case "borrar":
-                                conexion.query(`DELETE FROM to_do.tareas WHERE nombre = '${tarea}'`);
-                                return "Tarea borrada ok";
-                        }
-                    }
-                }
-                switch (accion){
-                    case "insertar":
-                        conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
-                        return "Tarea ingresada ok";
-                    case "renombrar":
-                    case "completar":
-                    case "borrar":
-                        return "La tarea no existe";
-                }
-            }).then (respuesta => {
-                conexion.end();
-                resolve (respuesta);
-            });
-        });
-    });
-}
-
 function verificar_tarea_existe(tarea){
     return new Promise((resolve) => {
         conexion.query(`SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas where tareas.nombre = '${tarea}'`)
@@ -83,22 +41,6 @@ function verificar_tarea_existe(tarea){
                 return;
             }
             resolve (true);
-        });
-    });
-}
-
-function consultar_datos_renombrar(tarea,nueva_tarea){
-    return new Promise ((resolve) => {
-        conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
-        .then(function(datos){
-            for(let i in datos){
-                if (datos[i].nombre === nueva_tarea){
-                    resolve ("La tarea ya existe");
-                    return;
-                }
-            }
-            conexion.query(`UPDATE to_do.tareas SET nombre = '${nueva_tarea}' WHERE nombre = '${tarea}'`);
-            resolve ("Tarea renombrada ok");
         });
     });
 }
@@ -114,6 +56,33 @@ function insertar(tarea){
                 }
                 conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
                 return "Tarea ingresada ok";
+            }).then(resultado => {
+                conexion.end();
+                resolve (resultado);
+            });
+        });
+    });
+}
+
+function renombrar(tarea,nueva_tarea){
+    return new Promise (resolve => {
+        crear_conexion()
+        .then(() => {
+            verificar_tarea_existe(tarea)
+            .then(existe => {
+                if (existe === true){
+                    return verificar_tarea_existe(nueva_tarea)
+                    .then (guardada => {
+                        if (guardada === true){
+                            return "La tarea ya existe";
+                        }
+                        else{
+                            conexion.query(`UPDATE to_do.tareas SET nombre = '${nueva_tarea}' WHERE nombre = '${tarea}'`);
+                            return "Tarea renombrada ok";
+                        }
+                    });
+                }
+                return "La tarea no existe";
             }).then(resultado => {
                 conexion.end();
                 resolve (resultado);

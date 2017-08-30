@@ -59,7 +59,7 @@ app.get("/:ac/:tar/:ntar", (req, res) => {
     switch (ac) {
         case "renombrar":
             accion
-                .renombrar(ac, tar, ntar).then(respuesta => res.json(respuesta));
+                .renombrar(tar, ntar).then(respuesta => res.json(respuesta));
             break;
     }
 });
