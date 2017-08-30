@@ -2,7 +2,8 @@ let mysql = require ("promise-mysql");
 let conexion = null;
 
 let accion = {
-    insertar: (accion,tarea) => verificar_tarea_existe(accion,tarea,null),
+    insertar: (tarea) => insertar(tarea),
+    
     renombrar:(accion,tarea,nueva_tarea) => verificar_tarea_existe(accion,tarea,nueva_tarea),
     
     completar:(tarea) => completar(tarea),
@@ -98,6 +99,25 @@ function consultar_datos_renombrar(tarea,nueva_tarea){
             }
             conexion.query(`UPDATE to_do.tareas SET nombre = '${nueva_tarea}' WHERE nombre = '${tarea}'`);
             resolve ("Tarea renombrada ok");
+        });
+    });
+}
+
+function insertar(tarea){
+    return new Promise(resolve => {
+        crear_conexion()
+        .then(() => {
+            verificar_tarea_existe(tarea)
+            .then (existe => {
+                if(existe === true){
+                    return "La tarea ya existe";
+                }
+                conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
+                return "Tarea ingresada ok";
+            }).then(resultado => {
+                conexion.end();
+                resolve (resultado);
+            });
         });
     });
 }

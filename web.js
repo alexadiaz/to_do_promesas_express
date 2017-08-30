@@ -34,7 +34,7 @@ app.get("/:ac/:tar", (req, res) => {
     let tar = req.params.tar;
     switch (ac) {
         case "insertar":
-            accion.insertar(ac, tar).then(respuesta => res.json(respuesta));
+            accion.insertar(tar).then(respuesta => res.json(respuesta));
             break;
         case "renombrar":
             res.json("Debe escribir nuevo nombre de tarea");
