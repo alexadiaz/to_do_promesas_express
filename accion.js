@@ -73,6 +73,19 @@ function verificar_tarea_existe(accion,tarea,nueva_tarea){
     });
 }
 
+function verificar_tarea_existe(tarea){
+    return new Promise((resolve) => {
+        conexion.query(`SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas where tareas.nombre = '${tarea}'`)
+        .then(consulta => {
+            if (consulta.length === 0){
+                resolve (false);
+                return;
+            }
+            resolve (true);
+        });
+    });
+}
+
 function consultar_datos_renombrar(tarea,nueva_tarea){
     return new Promise ((resolve) => {
         conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
