@@ -5,8 +5,9 @@ let accion = {
     insertar: (accion,tarea) => verificar_tarea_existe(accion,tarea,null),
     renombrar:(accion,tarea,nueva_tarea) => verificar_tarea_existe(accion,tarea,nueva_tarea),
     completar:(accion,tarea) => verificar_tarea_existe(accion,tarea,null),
-    borrar:(accion,tarea) => verificar_tarea_existe(accion,tarea,null),
-    consultar: () => consultar_todo(),
+    
+    borrar:(tarea) => borrar(tarea),
+    consultar: () => consultar(),
     consultar_tarea: tarea => consultar_tarea(tarea),
     ayuda:() =>  {
         let menu = {
@@ -86,6 +87,25 @@ function consultar_datos_renombrar(tarea,nueva_tarea){
             resolve ("Tarea renombrada ok");
         });
     });
+}
+
+function borrar(tarea){
+    return new Promise(resolve =>{
+        crear_conexion()
+        .then(() => {
+            verificar_tarea_existe(tarea)
+            .then (existe => {
+                if(existe === true){
+                    conexion.query(`DELETE FROM to_do.tareas WHERE nombre = '${tarea}'`);
+                    return "Tarea borrada ok";
+                }
+                return "La tarea no existe";
+            }).then(resultado =>{
+                conexion.end();
+                resolve (resultado);
+            });
+        });
+    }); 
 }
 
 function completar(tarea){
