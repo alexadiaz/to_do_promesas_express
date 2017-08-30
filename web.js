@@ -15,6 +15,10 @@ app.get("/:ac", (req,res) => {
         case "renombrar":
             res.send("Debe escribir tarea y nuevo nombre de tarea");
         break;
+        case "consultar":
+            accion.consultar()
+            .then(respuesta => res.json({respuesta}));
+        break;
     }
 });
 
@@ -53,5 +57,3 @@ app.get("/:ac/:tar/:ntar",(req, res) => {
 });
 
 app.listen(3000);
-
-//res.json({accion:accion});
