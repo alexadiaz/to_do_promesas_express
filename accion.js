@@ -19,7 +19,7 @@ let accion = {
         };
         return menu;
     }
-}
+};
 
 function crear_conexion(){
     return mysql.createConnection({
@@ -33,7 +33,7 @@ function crear_conexion(){
 }
 
 function verificar_tarea_existe(accion,tarea,nueva_tarea){
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve) => {
         crear_conexion()
         .then(() => {
             conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
@@ -73,7 +73,7 @@ function verificar_tarea_existe(accion,tarea,nueva_tarea){
 }
 
 function consultar_datos_renombrar(tarea,nueva_tarea){
-    return new Promise ((resolve, reject) => {
+    return new Promise ((resolve) => {
         conexion.query("SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas")
         .then(function(datos){
             for(let i in datos){
@@ -89,7 +89,7 @@ function consultar_datos_renombrar(tarea,nueva_tarea){
 }
 
 function completar(tarea){
-    return new Promise(function(resolve,reject){
+    return new Promise(function(resolve){
         conexion.query(`SELECT tareas.estado FROM to_do.tareas where nombre = '${tarea}'`)
         .then(function(datos){
             if (datos[0].estado === "terminado"){
@@ -102,10 +102,10 @@ function completar(tarea){
             }
         });
     });
-};
+}
 
 function consultar_todo(){
-    return new Promise ((resolve,reject) => {
+    return new Promise ((resolve) => {
         crear_conexion()
         .then(() => {
             conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas")
@@ -118,7 +118,7 @@ function consultar_todo(){
 }
 
 function consultar_tarea(tarea){
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve){
         crear_conexion()
         .then (() =>{
             conexion.query(`SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas WHERE tareas.nombre like '%${tarea}%'`)

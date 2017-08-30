@@ -2,69 +2,67 @@ const express = require("express");
 const app = express();
 const accion = require("./accion.js");
 
-app.get("/", (req,res) => res.send ("Debe escribir una accion"));
+app.get("/", (req, res) => res.send("Debe escribir una accion"));
 
-app.get("/:ac", (req,res) => {
+app.get("/:ac", (req, res) => {
     let ac = req.params.ac;
-    switch (ac){
-        case "insertar": 
-        case "completar": 
-        case "borrar": 
+    switch (ac) {
+        case "insertar":
+        case "completar":
+        case "borrar":
             res.json("Debe escribir tarea");
-        break;
+            break;
         case "renombrar":
             res.json("Debe escribir tarea y nuevo nombre de tarea");
-        break;
+            break;
         case "consultar":
-            accion.consultar()
-            .then(respuesta => res.json({respuesta}));
-        break;
+            accion.consultar().then(respuesta => res.json({ respuesta }));
+            break;
         case "consultar_tarea":
             res.json("Debe escribir tarea o letras contenidas en ella");
-        break;
+            break;
         case "ayuda":
             res.json(accion.ayuda());
-        break;
+            break;
         default:
-            res.json ("La accion no es valida");
+            res.json("La accion no es valida");
     }
 });
 
-app.get("/:ac/:tar", (req,res) => {
+app.get("/:ac/:tar", (req, res) => {
     let ac = req.params.ac;
     let tar = req.params.tar;
-    switch (ac){
+    switch (ac) {
         case "insertar":
-            accion.insertar(ac,tar)
-            .then((respuesta) => res.json (respuesta));
-        break;
+            accion.insertar(ac, tar).then(respuesta => res.json(respuesta));
+            break;
         case "renombrar":
             res.json("Debe escribir nuevo nombre de tarea");
-        break;
+            break;
         case "completar":
-            accion.completar(ac,tar)
-            .then(respuesta => res.json(respuesta));
-        break;
+            accion.completar(ac, tar).then(respuesta => res.json(respuesta));
+            break;
         case "borrar":
-            accion.borrar(ac,tar)
-            .then (respuesta => res.json(respuesta));
-        break;
+            accion.borrar(ac, tar).then(respuesta => res.json(respuesta));
+            break;
         case "consultar_tarea":
-            accion.consultar_tarea(tar)
-            .then(respuesta => res.json({respuesta}));
-        break;
+            accion
+                .consultar_tarea(tar)
+                .then(respuesta => res.json({ respuesta }));
+            break;
     }
 });
 
-app.get("/:ac/:tar/:ntar",(req, res) => {
+app.get("/:ac/:tar/:ntar", (req, res) => {
     let ac = req.params.ac;
     let tar = req.params.tar;
     let ntar = req.params.ntar;
-    switch (ac){
+    switch (ac) {
         case "renombrar":
-            accion.renombrar(ac,tar,ntar)
-            .then(respuesta => res.json(respuesta));
-        break;
+            accion
+                .renombrar(ac, tar, ntar)
+                .then(respuesta => res.json(respuesta));
+            break;
     }
 });
 
