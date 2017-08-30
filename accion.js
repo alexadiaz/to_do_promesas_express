@@ -137,6 +137,25 @@ function completar(tarea){
     });
 }
 
+function borrar(tarea){
+    return new Promise(resolve =>{
+        crear_conexion()
+        .then(() => {
+            verificar_tarea_existe(tarea)
+            .then (existe => {
+                if(existe === true){
+                    conexion.query(`DELETE FROM to_do.tareas WHERE nombre = '${tarea}'`);
+                    return "Tarea borrada ok";
+                }
+                return "La tarea no existe";
+            }).then(resultado =>{
+                conexion.end();
+                resolve (resultado);
+            });
+        });
+    }); 
+}
+
 function consultar(){
     return new Promise ((resolve) => {
         crear_conexion()
