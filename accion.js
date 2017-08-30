@@ -8,7 +8,17 @@ let accion = {
     borrar:(accion,tarea) => verificar_tarea_existe(accion,tarea,null),
     consultar: () => consultar_todo(),
     consultar_tarea: tarea => consultar_tarea(tarea),
-    ayuda:null
+    ayuda:() =>  {
+        let menu = {
+            insertar: "Insertar una tarea",
+            renombrar: "Renombrar una tarea",
+            completar: "Completar una tarea",
+            borrar: "Borrar una tarea",
+            consultar: "Consultar todas las tareas",
+            consultar_tarea: "Consultar por tarea"
+        };
+        return menu;
+    }
 }
 
 function crear_conexion(){

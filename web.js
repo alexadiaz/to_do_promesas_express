@@ -22,6 +22,9 @@ app.get("/:ac", (req,res) => {
         case "consultar_tarea":
             res.send("Debe escribir tarea o letras contenidas en ella");
         break;
+        case "ayuda":
+            res.send(accion.ayuda());
+        break;
     }
 });
 
