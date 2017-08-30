@@ -137,17 +137,15 @@ function completar(tarea){
     });
 }
 
-function consultar_todo(){
+function consultar(){
     return new Promise ((resolve) => {
         crear_conexion()
         .then(() => {
-            conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas")
-            .then(consulta =>{
+            let consulta = conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas");
                 conexion.end();
                 resolve (consulta);
             });
         });
-    });
 }
 
 function consultar_tarea(tarea){
