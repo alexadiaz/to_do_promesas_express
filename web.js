@@ -47,8 +47,7 @@ app.get("/:ac/:tar", (req, res) => {
             break;
         case "consultar_tarea":
             accion
-                .consultar_tarea(tar)
-                .then(respuesta => res.json({ respuesta }));
+                .consultar_tarea(tar).then(respuesta => res.json({ respuesta }));
             break;
     }
 });
@@ -60,8 +59,7 @@ app.get("/:ac/:tar/:ntar", (req, res) => {
     switch (ac) {
         case "renombrar":
             accion
-                .renombrar(ac, tar, ntar)
-                .then(respuesta => res.json(respuesta));
+                .renombrar(ac, tar, ntar).then(respuesta => res.json(respuesta));
             break;
     }
 });
