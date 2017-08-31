@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const accion = require("./accion.js");
+
+app.use(cors());
 
 app.get("/", (req, res) => res.send("Debe escribir una accion"));
 
