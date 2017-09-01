@@ -19,7 +19,7 @@ app.get("/:ac", (req, res) => {
             res.json("Debe escribir tarea y nuevo nombre de tarea");
             break;
         case "consultar":
-            accion.consultar().then(respuesta => res.json({ respuesta }));
+            accion.consultar().then(respuesta => res.json( respuesta ));
             break;
         case "consultar_tarea":
             res.json("Debe escribir tarea o letras contenidas en ella");
