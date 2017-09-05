@@ -148,7 +148,8 @@ function consultar(){
     return new Promise ((resolve) => {
         crear_conexion()
         .then(() => {
-            let consulta = conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas");
+            conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas");
+        }).then(consulta =>{
             conexion.end();
             resolve (consulta);
         });
@@ -160,7 +161,7 @@ function consultar_tarea(tarea){
         crear_conexion()
         .then (() =>{
             conexion.query(`SELECT idtareas,nombre,estado,creacion,finalizacion FROM to_do.tareas WHERE tareas.nombre like '%${tarea}%'`)
-            .then (function(datos){
+            .then ((datos) =>{
                 if(datos.length === 0){
                     return "No se encontraron coincidencias";
                 }
