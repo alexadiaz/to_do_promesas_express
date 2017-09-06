@@ -54,8 +54,11 @@ function insertar(tarea){
                 if(existe === true){
                     return "La tarea ya existe";
                 }
-                conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`);
-                return "Tarea ingresada ok";
+                return conexion.query(`INSERT INTO to_do.tareas (nombre,estado,creacion) VALUES ('${tarea}','pendiente',now())`)
+                    .then(()  => {
+                        return "Tarea ingresada ok";
+                    });
+                
             }).then(resultado => {
                 conexion.end();
                 resolve (resultado);
@@ -77,8 +80,10 @@ function renombrar(tarea,nueva_tarea){
                             return "La tarea ya existe";
                         }
                         else{
-                            conexion.query(`UPDATE to_do.tareas SET nombre = '${nueva_tarea}' WHERE nombre = '${tarea}'`);
-                            return "Tarea renombrada ok";
+                            return conexion.query(`UPDATE to_do.tareas SET nombre = '${nueva_tarea}' WHERE nombre = '${tarea}'`)
+                            .then(() => {
+                                return "Tarea renombrada ok";
+                            });
                         }
                     });
                 }
@@ -115,13 +120,15 @@ function completar_tarea(tarea){
         conexion.query(`SELECT tareas.estado FROM to_do.tareas where nombre = '${tarea}'`)
         .then(datos => {
             if (datos[0].estado === "terminado"){
-                resolve ("La tarea ya estaba terminada");
+                return "La tarea ya estaba terminada";
             }
             else{
-                conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tarea}'`);
-                resolve ("Tarea completada ok");
+                return conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tarea}'`)
+                .then(() => {
+                    return "Tarea completada ok";
+                });
             }
-        });
+        }).then(respuesta => resolve (respuesta));
     });
 }
 
@@ -132,8 +139,10 @@ function borrar(tarea){
             verificar_tarea_existe(tarea)
             .then (existe => {
                 if(existe === true){
-                    conexion.query(`DELETE FROM to_do.tareas WHERE nombre = '${tarea}'`);
-                    return "Tarea borrada ok";
+                    return conexion.query(`DELETE FROM to_do.tareas WHERE nombre = '${tarea}'`)
+                    .then(() => {
+                        return "Tarea borrada ok";
+                    });
                 }
                 return "La tarea no existe";
             }).then(resultado =>{
@@ -148,10 +157,11 @@ function consultar(){
     return new Promise ((resolve) => {
         crear_conexion()
         .then(() => {
-            conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas");
-        }).then(consulta =>{
-            conexion.end();
-            resolve (consulta);
+            conexion.query("select idtareas,nombre,estado,creacion,finalizacion from to_do.tareas") 
+            .then(consulta =>{
+                conexion.end();
+                resolve (consulta);
+            });
         });
     });
 }
