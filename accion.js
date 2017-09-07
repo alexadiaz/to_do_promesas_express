@@ -120,7 +120,10 @@ function completar_tarea(tarea){
         conexion.query(`SELECT tareas.estado FROM to_do.tareas where nombre = '${tarea}'`)
         .then(datos => {
             if (datos[0].estado === "terminado"){
-                return "La tarea ya estaba terminada";
+                return conexion.query(`UPDATE to_do.tareas SET estado = 'pendiente', finalizacion = null WHERE nombre = '${tarea}'`)
+                .then(() => {
+                    return "Tarea pendiente ok";
+                });
             }
             else{
                 return conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tarea}'`)
