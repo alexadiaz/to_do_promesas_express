@@ -192,19 +192,19 @@ function completar_todo(){
     return new Promise(resolve =>{
         consultar()
         .then(tareas =>{
-            for (let i in tareas){
-                if(tareas[i].finalizacion === null){
-                    return conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tareas[i].nombre}'`)
-                    .then(() =>{
-                        return "Tareas completadas ok";
-                    });
+            crear_conexion()
+            .then(() =>{
+                for (let i in tareas){
+                    if(tareas[i].finalizacion === null){
+                        conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tareas[i].nombre}'`);
+                    }
                 }
-            }
-        }) .then(consulta =>{
-            conexion.end();
-            resolve (consulta); 
+            }).then(() =>{
+                conexion.end();
+                resolve ("Tareas completadas ok");
+            });
         });
     });
 }
 
-module.exports = accion;
+    module.exports = accion;
