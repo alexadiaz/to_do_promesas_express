@@ -8,6 +8,7 @@ let accion = {
     borrar:(tarea) => borrar(tarea),
     consultar: () => consultar(),
     consultar_tarea: tarea => consultar_tarea(tarea),
+    completar_todo: () => completar_todo(),
     ayuda:() =>  {
         let menu = {
             insertar: "Insertar una tarea",
@@ -183,6 +184,23 @@ function consultar_tarea(tarea){
                 conexion.end();
                 resolve (consulta);
             });
+        });
+    });
+}
+
+function completar_todo(){
+    return new Promise(resolve =>{
+        consultar()
+        .then(tareas =>{
+            for (let i in tareas){
+                if(tareas[i].finalizacion === null){
+                    conexion.query("UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now()")
+                    .then(consulta =>{
+                         conexion.end();
+                         resolve (consulta); 
+                    });
+                }
+            }
         });
     });
 }

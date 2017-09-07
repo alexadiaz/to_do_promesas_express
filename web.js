@@ -24,6 +24,9 @@ app.get("/:ac", (req, res) => {
         case "consultar_tarea":
             res.json("Debe escribir tarea o letras contenidas en ella");
             break;
+        case "completar_todo":
+            accion.completar_todo().then(respuesta => res.json(respuesta));
+        break;
         case "ayuda":
             res.json(accion.ayuda());
             break;
