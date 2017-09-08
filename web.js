@@ -7,70 +7,50 @@ app.use(cors());
 
 app.get("/", (req, res) => res.send("Debe escribir una accion"));
 
-app.get("/:ac", (req, res) => {
-    let ac = req.params.ac;
-    switch (ac) {
-        case "insertar":
-        case "completar":
-        case "borrar":
-            res.json("Debe escribir tarea");
-            break;
-        case "renombrar":
-            res.json("Debe escribir tarea y nuevo nombre de tarea");
-            break;
-        case "consultar":
-            accion.consultar().then(respuesta => res.json( respuesta ));
-            break;
-        case "consultar_tarea":
-            res.json("Debe escribir tarea o letras contenidas en ella");
-            break;
-        case "completar_todo":
-            accion.completar_todo().then(respuesta => res.json(respuesta));
-        break;
-        case "pendiente_todo":
-            accion.pendiente_todo().then(respuesta => res.json(respuesta));
-        break;
-        case "ayuda":
-            res.json(accion.ayuda());
-            break;
-        default:
-            res.json("La accion no es valida");
-    }
+app.get("/:consultar", (req, res) => {
+   accion.consultar().then(respuesta => res.json( respuesta ));
 });
 
-app.get("/:ac/:tar", (req, res) => {
-    let ac = req.params.ac;
+app.get("/:completar_todo", (req, res) => {
+    accion.completar_todo().then(respuesta => res.json(respuesta));
+});
+
+app.get("/:pendiente_todo", (req, res) => {
+    accion.pendiente_todo().then(respuesta => res.json(respuesta));
+});
+
+app.get("/:borrar_completados", (req, res) => {
+    accion.borrar_completados().then(respuesta => res.json(respuesta));
+});
+
+app.get("/:ayuda", (req, res) => {
+    res.json(accion.ayuda());
+});
+
+app.get("/:insertar/:tar", (req, res) => {
     let tar = req.params.tar;
-    switch (ac) {
-        case "insertar":
-            accion.insertar(tar).then(respuesta => res.json(respuesta));
-            break;
-        case "renombrar":
-            res.json("Debe escribir nuevo nombre de tarea");
-            break;
-        case "completar":
-            accion.completar(tar).then(respuesta => res.json(respuesta));
-            break;
-        case "borrar":
-            accion.borrar(tar).then(respuesta => res.json(respuesta));
-            break;
-        case "consultar_tarea":
-            accion
-                .consultar_tarea(tar).then(respuesta => res.json({ respuesta }));
-            break;
-    }
+    accion.insertar(tar).then(respuesta => res.json(respuesta));
 });
 
-app.get("/:ac/:tar/:ntar", (req, res) => {
-    let ac = req.params.ac;
+app.get("/:completar/:tar", (req, res) => {
+    let tar = req.params.tar;
+    accion.completar(tar).then(respuesta => res.json(respuesta));
+});
+
+app.get("/:borrar/:tar", (req, res) => {
+    let tar = req.params.tar;
+    accion.borrar(tar).then(respuesta => res.json(respuesta));
+});
+
+app.get("/:consultar_tarea/:tar", (req, res) => {
+    let tar = req.params.tar;
+    accion.consultar_tarea(tar).then(respuesta => res.json({ respuesta }));
+});
+
+app.get("/:renombrar/:tar/:ntar", (req, res) => {
     let tar = req.params.tar;
     let ntar = req.params.ntar;
-    switch (ac) {
-        case "renombrar":
-            accion
-                .renombrar(tar, ntar).then(respuesta => res.json(respuesta));
-            break;
-    }
+    accion.renombrar(tar, ntar).then(respuesta => res.json(respuesta));
 });
 
 app.listen(3000);
