@@ -196,11 +196,13 @@ function completar_todo(){
         .then(tareas =>{
             crear_conexion()
             .then(() =>{
+                let promesas = [];
                 for (let i in tareas){
                     if(tareas[i].estado === "pendiente"){
-                        conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tareas[i].nombre}'`);
+                        promesas.push (conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tareas[i].nombre}'`));
                     }
                 }
+                return Promise.all(promesas);
             }).then(() =>{
                 conexion.end();
                 resolve ("Tareas completadas ok");
@@ -215,11 +217,13 @@ function pendiente_todo(){
         .then(tareas =>{
             crear_conexion()
             .then(() =>{
+                let promesas =[];
                 for (let i in tareas){
                     if(tareas[i].estado === "terminado"){
-                        conexion.query(`UPDATE to_do.tareas SET estado = 'pendiente', finalizacion = null WHERE nombre = '${tareas[i].nombre}'`);
+                        promesas.push (conexion.query(`UPDATE to_do.tareas SET estado = 'pendiente', finalizacion = null WHERE nombre = '${tareas[i].nombre}'`));
                     }
                 }
+                return Promise.all();
             }).then(() =>{
                 conexion.end();
                 resolve ("Tareas pendientes ok");
