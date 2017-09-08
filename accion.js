@@ -10,6 +10,7 @@ let accion = {
     consultar_tarea: tarea => consultar_tarea(tarea),
     completar_todo: () => completar_todo(),
     pendiente_todo: () => pendiente_todo(),
+    borrar_completados: () => borrar_completados(),
     ayuda:() =>  {
         let menu = {
             insertar: "Insertar una tarea",
@@ -222,6 +223,27 @@ function pendiente_todo(){
             }).then(() =>{
                 conexion.end();
                 resolve ("Tareas pendientes ok");
+            });
+        });
+    });
+}
+
+function borrar_completados(){
+    return new Promise(resolve =>{
+        consultar()
+        .then(tareas =>{
+            crear_conexion()
+            .then(() =>{
+                let promesas =[];
+                for (let i in tareas){
+                    if(tareas[i].estado === "terminado"){
+                         promesas.push (conexion.query(`DELETE FROM to_do.tareas WHERE nombre = '${tareas[i].nombre}'`));
+                    }
+                }
+                return Promise.all(promesas);
+            }).then(() =>{
+                conexion.end();
+                resolve ("Tareas borradas ok");
             });
         });
     });
