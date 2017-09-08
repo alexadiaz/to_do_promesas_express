@@ -226,7 +226,7 @@ function pendiente_todo(){
                         promesas.push (conexion.query(`UPDATE to_do.tareas SET estado = 'pendiente', finalizacion = null WHERE nombre = '${tareas[i].nombre}'`));
                     }
                 }
-                return Promise.all();
+                return Promise.all(promesas);
             }).then(() =>{
                 conexion.end();
                 resolve ("Tareas pendientes ok");
