@@ -12,14 +12,17 @@ let accion = {
     pendiente_todo: () => pendiente_todo(),
     borrar_completados: () => borrar_completados(),
     ayuda:() =>  {
-        let menu = {
-            insertar: "Insertar una tarea",
-            renombrar: "Renombrar una tarea",
-            completar: "Completar una tarea",
-            borrar: "Borrar una tarea",
-            consultar: "Consultar todas las tareas",
-            consultar_tarea: "Consultar por tarea"
-        };
+        let menu = [
+            "Insertar tareas",
+            "Renombrar tareas",
+            "Completar una tarea",
+            "Borrar una tarea",
+            "Consultar todas las tareas",
+            "Consultar una tarea",
+            "Completar todas las tareas",
+            "Poner en pendiente todas las tareas",
+            "Borrar todas las tareas terminadas"
+        ];
         return menu;
     }
 };
