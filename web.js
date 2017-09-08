@@ -5,8 +5,6 @@ const accion = require("./accion.js");
 
 app.use(cors());
 
-app.get("/", (req, res) => res.send("Debe escribir una accion"));
-
 app.get("/:consultar", (req, res) => {
    accion.consultar().then(respuesta => res.json( respuesta ));
 });
