@@ -27,6 +27,9 @@ app.get("/:ac", (req, res) => {
         case "completar_todo":
             accion.completar_todo().then(respuesta => res.json(respuesta));
         break;
+        case "pendiente_todo":
+            accion.pendiente_todo().then(respuesta => res.json(respuesta));
+        break;
         case "ayuda":
             res.json(accion.ayuda());
             break;

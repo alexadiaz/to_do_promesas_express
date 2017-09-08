@@ -9,6 +9,7 @@ let accion = {
     consultar: () => consultar(),
     consultar_tarea: tarea => consultar_tarea(tarea),
     completar_todo: () => completar_todo(),
+    pendiente_todo: () => pendiente_todo(),
     ayuda:() =>  {
         let menu = {
             insertar: "Insertar una tarea",
@@ -195,7 +196,7 @@ function completar_todo(){
             crear_conexion()
             .then(() =>{
                 for (let i in tareas){
-                    if(tareas[i].finalizacion === null){
+                    if(tareas[i].estado === "pendiente"){
                         conexion.query(`UPDATE to_do.tareas SET estado = 'terminado', finalizacion = now() WHERE nombre = '${tareas[i].nombre}'`);
                     }
                 }
@@ -207,4 +208,23 @@ function completar_todo(){
     });
 }
 
-    module.exports = accion;
+function pendiente_todo(){
+    return new Promise(resolve =>{
+        consultar()
+        .then(tareas =>{
+            crear_conexion()
+            .then(() =>{
+                for (let i in tareas){
+                    if(tareas[i].estado === "terminado"){
+                        conexion.query(`UPDATE to_do.tareas SET estado = 'pendiente', finalizacion = null WHERE nombre = '${tareas[i].nombre}'`);
+                    }
+                }
+            }).then(() =>{
+                conexion.end();
+                resolve ("Tareas pendientes ok");
+            });
+        });
+    });
+}
+
+module.exports = accion;
