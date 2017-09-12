@@ -44,7 +44,7 @@ app.get("/consultar_tarea", (req, res) => {
 });
 
 app.post("/renombrar", (req, res) => {
-    accion.renombrar(req.query.tarea, req.query.nueva).then(respuesta => res.json(respuesta));
+    accion.renombrar(req.body.tarea, req.body.nueva).then(respuesta => res.json(respuesta));
 });
 
 app.get("/*", (req, res) => {
