@@ -2,9 +2,10 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const accion = require("./accion.js");
+var bodyparser = require("body-parser");
 
 app.use(cors());
-
+app.use(bodyparser.json());
 
 app.get("/ayuda", (req, res) => {
     res.json(accion.ayuda());
