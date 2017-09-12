@@ -43,9 +43,9 @@ app.get("/consultar_tarea", (req, res) => {
     accion.consultar_tarea(req.query.tarea).then(respuesta => res.json(respuesta));
 });
 
-// app.get("/renombrar", (req, res) => {
-//     accion.renombrar(req.query.tarea, req.query.nueva).then(respuesta => res.json(respuesta));
-// });
+app.post("/renombrar", (req, res) => {
+    accion.renombrar(req.query.tarea, req.query.nueva).then(respuesta => res.json(respuesta));
+});
 
 app.get("/*", (req, res) => {
     res.json("esa tal ruta " + req.originalUrl + " no existe!!!");
