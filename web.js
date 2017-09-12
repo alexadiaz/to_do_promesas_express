@@ -7,38 +7,36 @@ var bodyparser = require("body-parser");
 app.use(cors());
 app.use(bodyparser.json());
 
-app.get("/ayuda", (req, res) => {
+app.GET("/ayuda", (req, res) => {
     res.json(accion.ayuda());
 });
 
-app.get("/consultar", (req, res) => {
+app.GET("/consultar", (req, res) => {
    accion.consultar().then(respuesta => res.json( respuesta ));
 });
 
-app.get("/completar_todo", (req, res) => {
+app.POST("/completar_todo", (req, res) => {
     accion.completar_todo().then(respuesta => res.json(respuesta));
 });
 
-app.get("/pendiente_todo", (req, res) => {
+app.POST("/pendiente_todo", (req, res) => {
     accion.pendiente_todo().then(respuesta => res.json(respuesta));
 });
 
-app.get("/borrar_completados", (req, res) => {
+app.POST("/borrar_completados", (req, res) => {
     accion.borrar_completados().then(respuesta => res.json(respuesta));
 });
 
-app.get("/insertar/:tar", (req, res) => {
-    let tar = req.params.tar;
-    accion.insertar(tar).then(respuesta => res.json(respuesta));
+app.POST("/insertar", (req, res) => {
+    accion.insertar(req.body.tarea).then(respuesta => res.json(respuesta));
 });
 
-app.post("/completar", (req, res) => {
+app.POST("/completar", (req, res) => {
     accion.completar(req.body.tarea).then(respuesta => res.json(respuesta));
 });
 
-app.get("/borrar/:tar", (req, res) => {
-    let tar = req.params.tar;
-    accion.borrar(tar).then(respuesta => res.json(respuesta));
+app.POST("/borrar", (req, res) => {
+    accion.borrar(req.body.tarea).then(respuesta => res.json(respuesta));
 });
 
 app.get("/consultar_tarea/:tar", (req, res) => {
