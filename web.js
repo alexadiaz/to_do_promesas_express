@@ -27,16 +27,13 @@ app.get("/borrar_completados", (req, res) => {
     accion.borrar_completados().then(respuesta => res.json(respuesta));
 });
 
-
-
 app.get("/insertar/:tar", (req, res) => {
     let tar = req.params.tar;
     accion.insertar(tar).then(respuesta => res.json(respuesta));
 });
 
-app.get("/completar/:tar", (req, res) => {
-    let tar = req.params.tar;
-    accion.completar(tar).then(respuesta => res.json(respuesta));
+app.post("/completar", (req, res) => {
+    accion.completar(req.body.tarea).then(respuesta => res.json(respuesta));
 });
 
 app.get("/borrar/:tar", (req, res) => {
